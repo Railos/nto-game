@@ -4,7 +4,7 @@ public class PlayerInput : MonoBehaviour
 {
     public static PlayerInput Instance { get; private set; }
 
-    private Controls controls;
+    public Controls controls;
 
     private void Awake()
     {

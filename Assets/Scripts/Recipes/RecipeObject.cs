@@ -4,7 +4,7 @@ using UnityEngine;
 public class RecipeObject : ScriptableObject
 {
     public string name;
-    public ItemObject[] items;
+    public Item[] items;
     public float price;
 
 }

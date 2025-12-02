@@ -1,21 +1,24 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class CustomerManager : MonoBehaviour
 {
     public GameObject customerPrefab;
     public Transform spawnPoint;
     public Transform servicePoint;
-    public string[] customerPhrases;
+    public List<CustomerObject> customerPool = new List<CustomerObject>();
     public Button serveButton;
     public Button goToGardenButton;
     public TextMeshProUGUI serveButtonText;
 
     private GameObject activeCustomer;
+    private CustomerObject activeCustomerObject;
     private int customersServed = 0;
     private int maxCustomersPerDay = 5;
     private bool dayFinished = false;
+    private TextMeshProUGUI text;
 
     void Start()
     {
@@ -34,26 +37,37 @@ public class CustomerManager : MonoBehaviour
             return;
         }
 
+        activeCustomerObject = customerPool[customersServed];
         activeCustomer = Instantiate(customerPrefab, spawnPoint.position, Quaternion.identity);
         activeCustomer.transform.position = servicePoint.position;
 
-        TextMeshProUGUI text = activeCustomer.GetComponentInChildren<TextMeshProUGUI>();
-        if (text != null && customerPhrases.Length > 0)
-        {
-            text.text = customerPhrases[Random.Range(0, customerPhrases.Length)];
-        }
+        text = activeCustomer.GetComponentInChildren<TextMeshProUGUI>();
+        text.text = activeCustomerObject.entryDialogues[Random.Range(0, activeCustomerObject.entryDialogues.Length)];
     }
 
     public void ServeCustomer()
     {
         if (dayFinished)
         {
+            for (int i = customerPool.Count - 1; i > 0; i--) {
+                int j = Random.Range(0, i + 1);
+                var temp = customerPool[i];
+                customerPool[i] = customerPool[j];
+                customerPool[j] = temp;
+            }
             StartNextDay();
             return;
         }
 
         if (activeCustomer == null) return;
 
+        text.text = activeCustomerObject.satisfiedDialogues[Random.Range(0, activeCustomerObject.satisfiedDialogues.Length)];
+
+        Invoke(nameof(FinishServing), 2f);
+    }
+
+    private void FinishServing()
+    {
         Destroy(activeCustomer);
         activeCustomer = null;
 
@@ -70,7 +84,6 @@ public class CustomerManager : MonoBehaviour
         dayFinished = true;
         goToGardenButton.interactable = true;
         UpdateButtonText();
-        Debug.Log("День завершён!");
     }
 
     private void StartNextDay()
@@ -79,7 +92,6 @@ public class CustomerManager : MonoBehaviour
         dayFinished = false;
         goToGardenButton.interactable = false;
         UpdateButtonText();
-        Debug.Log("Новый день начался!");
 
         SpawnNewCustomer();
     }
@@ -87,8 +99,8 @@ public class CustomerManager : MonoBehaviour
     private void UpdateButtonText()
     {
         if (dayFinished)
-            serveButtonText.text = "Следующий день";
+            serveButtonText.text = "РЎР»РµРґСѓСЋС‰РёР№ РґРµРЅСЊ";
         else
-            serveButtonText.text = "Обслужить";
+            serveButtonText.text = "РћР±СЃР»СѓР¶РёС‚СЊ";
     }
 }

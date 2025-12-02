@@ -25,4 +25,9 @@ public class PlayerInput : MonoBehaviour
     {
         return controls.Player.Move.ReadValue<Vector2>();
     }
+
+    public bool isInventoryButtonPressed()
+    {
+        return controls.Player.Inventory.triggered;
+    }
 }

@@ -178,8 +178,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u041E\u0431\u0441\u043B\u0443\u0436\u0438\u0442\u044C"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a403bcf23a1d4bf40a8cbd558ea9ba1f, type: 2}
+  m_sharedMaterial: {fileID: -5586900498791961446, guid: a403bcf23a1d4bf40a8cbd558ea9ba1f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -203,8 +203,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -287,7 +287,15 @@ MonoBehaviour:
   customerPrefab: {fileID: 1209578739298130064, guid: fb6e2400fd01e0c4682e2b51dca60e84, type: 3}
   spawnPoint: {fileID: 304407474}
   servicePoint: {fileID: 304407474}
-  customerPhrases: []
+  customerPool:
+  - {fileID: 11400000, guid: 461629b212753824481c5208673476f0, type: 2}
+  - {fileID: 11400000, guid: 461629b212753824481c5208673476f0, type: 2}
+  - {fileID: 11400000, guid: 461629b212753824481c5208673476f0, type: 2}
+  - {fileID: 11400000, guid: 461629b212753824481c5208673476f0, type: 2}
+  - {fileID: 11400000, guid: 461629b212753824481c5208673476f0, type: 2}
+  serveButton: {fileID: 2099585358}
+  goToGardenButton: {fileID: 366467081}
+  serveButtonText: {fileID: 14748377}
 --- !u!4 &69860574
 Transform:
   m_ObjectHideFlags: 0
@@ -542,8 +550,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -691.02, y: 461}
-  m_SizeDelta: {x: 500, y: 120}
+  m_AnchoredPosition: {x: -749, y: 478}
+  m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &366467081
 MonoBehaviour:
@@ -1114,8 +1122,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u0412 \u0441\u0430\u0434"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a403bcf23a1d4bf40a8cbd558ea9ba1f, type: 2}
+  m_sharedMaterial: {fileID: -5586900498791961446, guid: a403bcf23a1d4bf40a8cbd558ea9ba1f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1139,8 +1147,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 64
-  m_fontSizeBase: 64
+  m_fontSize: 72
+  m_fontSizeBase: 72
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

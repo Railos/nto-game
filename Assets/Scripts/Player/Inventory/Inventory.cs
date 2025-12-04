@@ -11,19 +11,16 @@ public class Inventory
     public Inventory()
     {
         itemList = new List<Item>();
-        AddItem(new Item { itemType = Item.ItemType.plant1, amount = 1 });
-        AddItem(new Item { itemType = Item.ItemType.plant2, amount = 1 });
-        AddItem(new Item { itemType = Item.ItemType.plant3, amount = 1 });
     }
 
     public void AddItem(Item item)
     {
-        if (item.IsStackable())
+        if (item.item.isStackable)
         {
             bool itemAlreadyInInventory = false;
             foreach (Item inventoryItem in itemList)
             {
-                if (inventoryItem.itemType == item.itemType)
+                if (inventoryItem.item.itemType == item.item.itemType)
                 {
                     inventoryItem.amount += item.amount;
                     itemAlreadyInInventory = true;

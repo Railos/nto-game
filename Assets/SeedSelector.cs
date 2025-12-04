@@ -3,21 +3,48 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class Ui_Inventory : MonoBehaviour
+public class SeedSelector : MonoBehaviour
 {
+
     private Inventory inventory;
     public Transform itemSlotContainer;
     public Transform itemSlotTemplate;
 
-    public void SetInventory(Inventory inventory)
+    public GameObject seedMenu;
+    public bool isOpen = false;
+
+    private void OnEnable()
     {
-        this.inventory = inventory;
-        inventory.OnItemListChanged += Inventory_OnItemListChanged;
+        EventManager.OnGardenSlotOpen += OpenMenu;
+    }
+
+    private void OnDisable()
+    {
+        EventManager.OnGardenSlotOpen -= OpenMenu;
+    }
+
+    public void OpenMenu(Component component)
+    {
+        if (seedMenu.activeSelf)
+        {
+            CloseMenu();
+            component.gameObject.GetComponent<GardeningSlot>().isVacant = true;
+            return;
+        }
+        seedMenu.SetActive(true);
+        isOpen = true;
         RefreshInventoryItems();
     }
 
-    private void Inventory_OnItemListChanged(object sender, EventArgs e)
+    public void CloseMenu()
     {
+        seedMenu.SetActive(false);
+        isOpen = false;
+    }
+    
+    public void SetInventory(Inventory inventory)
+    {
+        this.inventory = inventory;
         RefreshInventoryItems();
     }
 
@@ -33,6 +60,10 @@ public class Ui_Inventory : MonoBehaviour
         float itemSlotCellSize = 110f;
         foreach (Item item in inventory.GetItemList())
         {
+            if (item.item.itemType != ItemSO.ItemType.seeds)
+            {
+                continue;
+            }
             RectTransform itemSlotRectTransform = Instantiate(itemSlotTemplate, itemSlotContainer).GetComponent<RectTransform>();
             itemSlotRectTransform.gameObject.SetActive(true);
             itemSlotRectTransform.anchoredPosition = new Vector2(x * itemSlotCellSize, y * itemSlotCellSize);
@@ -56,5 +87,4 @@ public class Ui_Inventory : MonoBehaviour
             }
         }
     }
-
 }

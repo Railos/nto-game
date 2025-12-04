@@ -25,8 +25,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (PauseMenuManager.Instance.isPaused) return;
-        if (player.isInventoryOpen)
+        if (PauseMenuManager.Instance.isPaused)
+        {
+            player.seedSelector.CloseMenu();
+            return;
+        }
+        if (player.isInventoryOpen || player.seedSelector.isOpen)
         {
             move = Vector2.zero;
             animator.SetFloat("MoveX", 0);

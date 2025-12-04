@@ -6,11 +6,13 @@ public class Player : MonoBehaviour
     public bool isInventoryOpen = false;
     private Inventory inventory;
     public Ui_Inventory ui_Inventory;
+    public SeedSelector seedSelector;
 
     private void Awake()
     {
         inventory = new Inventory();
         ui_Inventory.SetInventory(inventory);
+        seedSelector.SetInventory(inventory);
     }
     
     private void OnTriggerEnter2D(Collider2D collision)
@@ -31,6 +33,10 @@ public class Player : MonoBehaviour
         {
             isInventoryOpen = !isInventoryOpen;
             ui_Inventory.gameObject.SetActive(isInventoryOpen);
+            if (isInventoryOpen)
+            {
+                seedSelector.CloseMenu();
+            }
         }
     }
 }

@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (PauseMenuManager.Instance.isPaused) return;
         if (player.isInventoryOpen)
         {
             move = Vector2.zero;

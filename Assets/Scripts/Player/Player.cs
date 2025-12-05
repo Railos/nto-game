@@ -14,7 +14,38 @@ public class Player : MonoBehaviour
         ui_Inventory.SetInventory(inventory);
         seedSelector.SetInventory(inventory);
     }
-    
+
+    private void OnEnable()
+    {
+        EventManager.OnSeedCollect += CollectPlantFromGardenSlot;
+        EventManager.OnSeedSelect += SelectSeed;
+    }
+
+    private void OnDisable()
+    {
+        EventManager.OnSeedCollect -= CollectPlantFromGardenSlot;
+        EventManager.OnSeedSelect -= SelectSeed;
+    }
+
+    private void SelectSeed(Component component, Item item) {
+        Item z = new Item()
+        {
+            item = item.item,
+            amount = 1
+        };
+        inventory.RemoveItem(z);
+    }
+
+    private void CollectPlantFromGardenSlot(Component component, Item seed)
+    {
+        Item plant = new Item()
+        {
+            item = seed.item.plant,
+            amount = seed.item.amountPlants
+        };
+        inventory.AddItem(plant);
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         ItemWorld itemWorld = collision.GetComponent<ItemWorld>();

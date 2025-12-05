@@ -11,16 +11,19 @@ public class SeedSelector : MonoBehaviour
     public Transform itemSlotTemplate;
 
     public GameObject seedMenu;
+    public GardeningSlot gardeningSlot;
     public bool isOpen = false;
 
     private void OnEnable()
     {
         EventManager.OnGardenSlotOpen += OpenMenu;
+        EventManager.OnSeedSelect += SelectSeed;
     }
 
     private void OnDisable()
     {
         EventManager.OnGardenSlotOpen -= OpenMenu;
+        EventManager.OnSeedSelect -= SelectSeed;
     }
 
     public void OpenMenu(Component component)
@@ -31,6 +34,7 @@ public class SeedSelector : MonoBehaviour
             component.gameObject.GetComponent<GardeningSlot>().isVacant = true;
             return;
         }
+        gardeningSlot = component.GetComponent<GardeningSlot>();
         seedMenu.SetActive(true);
         isOpen = true;
         RefreshInventoryItems();
@@ -40,6 +44,13 @@ public class SeedSelector : MonoBehaviour
     {
         seedMenu.SetActive(false);
         isOpen = false;
+    }
+
+    public void SelectSeed(Component component, Item item)
+    {
+        gardeningSlot.currentPlant = item;
+        CloseMenu();
+        gardeningSlot.StartGrowingPlant();
     }
     
     public void SetInventory(Inventory inventory)
@@ -68,6 +79,8 @@ public class SeedSelector : MonoBehaviour
             itemSlotRectTransform.gameObject.SetActive(true);
             itemSlotRectTransform.anchoredPosition = new Vector2(x * itemSlotCellSize, y * itemSlotCellSize);
             Image image = itemSlotRectTransform.Find("image").GetComponent<Image>();
+            ItemWorld z = itemSlotRectTransform.GetComponent<ItemWorld>();
+            z.item = item;
             image.sprite = item.item.sprite;
             TextMeshProUGUI textAmount = itemSlotRectTransform.Find("amountText").GetComponent<TextMeshProUGUI>();
             if (item.amount <= 1)

@@ -20,7 +20,7 @@ public class Inventory
             bool itemAlreadyInInventory = false;
             foreach (Item inventoryItem in itemList)
             {
-                if (inventoryItem.item.itemType == item.item.itemType)
+                if (inventoryItem.item == item.item)
                 {
                     inventoryItem.amount += item.amount;
                     itemAlreadyInInventory = true;
@@ -35,6 +35,31 @@ public class Inventory
         else
         {
             itemList.Add(item);
+        }
+        OnItemListChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void RemoveItem(Item item)
+    {
+        if (item.item.isStackable)
+        {
+            Item itemInInventory = null;
+            foreach (Item inventoryItem in itemList)
+            {
+                if (inventoryItem.item == item.item)
+                {
+                    inventoryItem.amount -= item.amount;
+                    itemInInventory = inventoryItem;
+                }
+            }
+            if (itemInInventory != null && itemInInventory.amount <= 0)
+            {
+                itemList.Remove(itemInInventory);
+            }
+        }
+        else
+        {
+            itemList.Remove(item);
         }
         OnItemListChanged?.Invoke(this, EventArgs.Empty);
     }

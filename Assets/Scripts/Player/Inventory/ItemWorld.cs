@@ -11,7 +11,7 @@ public class ItemWorld : MonoBehaviour
         return itemWorld;
     }
 
-    private Item item;
+    public Item item;
     private SpriteRenderer spriteRenderer;
 
     private void Awake()
@@ -28,5 +28,10 @@ public class ItemWorld : MonoBehaviour
     public Item GetItem()
     {
         return item;
+    }
+
+    public void SelectSeed()
+    {
+        EventManager.OnSeedSelect.Invoke(this, item);
     }
 }

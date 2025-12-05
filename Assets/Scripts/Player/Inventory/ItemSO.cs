@@ -14,7 +14,11 @@ public class ItemSO : ScriptableObject
 
     public string itemName;
     public ItemType itemType;
-    public int amount;
     public bool isStackable;
     public Sprite sprite;
+
+    [Header("Seeds")]
+    public float growTime;
+    public ItemSO plant;
+    public int amountPlants;
 }

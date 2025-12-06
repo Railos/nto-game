@@ -5,12 +5,26 @@ using System.Collections.Generic;
 
 public class CustomerManager : MonoBehaviour
 {
+    private enum DialogueState
+    {
+        WaitingOrder,    // сразу после прихода клиента показан заказ
+        ChoosingAnswer,  // игрок выбирает вариант
+        Reacting         // показана реакция, ждём следующего гостя
+    }
+
     [Header("UI")]
     public Image portraitImage;
     public TextMeshProUGUI dialogueText;
     public Button serveButton;
     public Button goToGardenButton;
     public TextMeshProUGUI serveButtonText;
+    public Button[] answerButtons;
+    public TextMeshProUGUI[] answerTexts;
+
+    [Header("Answer Colors")]
+    public Color correctColor = Color.green;
+    public Color wrongColor = Color.red;
+    public Color defaultAnswerColor = Color.white;
 
     [Header("Data")]
     public List<CustomerObject> customerPool = new List<CustomerObject>();
@@ -19,19 +33,23 @@ public class CustomerManager : MonoBehaviour
     private int customersServed = 0;
     private int maxCustomersPerDay = 5;
     private bool dayFinished = false;
-    private bool waitingForNextCustomer = false;
+    private DialogueState state = DialogueState.WaitingOrder;
 
     void Start()
     {
         ShuffleCustomerPool();
         goToGardenButton.interactable = false;
-        UpdateButtonText();
+
+        if (serveButton != null)
+            serveButton.onClick.AddListener(OnServeButtonClick);
+
         SpawnNewCustomer();
     }
 
     void SpawnNewCustomer()
     {
         if (dayFinished) return;
+
         if (customersServed >= maxCustomersPerDay)
         {
             EndDay();
@@ -55,52 +73,156 @@ public class CustomerManager : MonoBehaviour
                 .entryDialogues[Random.Range(0, activeCustomerObject.entryDialogues.Length)];
         }
 
-        waitingForNextCustomer = false;
+        // сразу показываем заказ
+        if (dialogueText != null)
+            dialogueText.text = activeCustomerObject.orderText;
+
+        state = DialogueState.WaitingOrder;
+        serveButtonText.text = "Приготовить";
+
+        ResetAnswerButtons();
+        HideUnusedAnswerButtons();
     }
 
-    public void ServeCustomer()
+    void OnServeButtonClick()
     {
         if (dayFinished)
         {
-            ShuffleCustomerPool();
             StartNextDay();
             return;
         }
 
         if (activeCustomerObject == null) return;
 
-        if (!waitingForNextCustomer)
+        switch (state)
         {
-            if (dialogueText != null && activeCustomerObject.satisfiedDialogues.Length > 0)
-            {
-                dialogueText.text = activeCustomerObject
-                    .satisfiedDialogues[Random.Range(0, activeCustomerObject.satisfiedDialogues.Length)];
-            }
+            case DialogueState.WaitingOrder:
+                ShowQuestionWithAnswers();
+                break;
 
-            waitingForNextCustomer = true;
+            case DialogueState.ChoosingAnswer:
+                // ничего, ждём выбор варианта
+                break;
+
+            case DialogueState.Reacting:
+                FinishServing();
+                break;
         }
-        else
+    }
+
+    void ShowQuestionWithAnswers()
+    {
+        state = DialogueState.ChoosingAnswer;
+
+        if (dialogueText != null)
+            dialogueText.text = activeCustomerObject.questionText;
+
+        ResetAnswerButtons();
+
+        if (answerButtons == null || answerTexts == null) return;
+
+        for (int i = 0; i < answerButtons.Length; i++)
         {
-            FinishServing();
+            if (i < activeCustomerObject.answerOptions.Length)
+            {
+                int index = i;
+
+                if (answerButtons[i] == null) continue;
+
+                answerButtons[i].gameObject.SetActive(true);
+                answerButtons[i].onClick.RemoveAllListeners();
+                answerButtons[i].onClick.AddListener(() => OnAnswerSelected(index));
+
+                if (i < answerTexts.Length && answerTexts[i] != null)
+                    answerTexts[i].text = activeCustomerObject.answerOptions[i];
+            }
+            else
+            {
+                if (answerButtons[i] != null)
+                    answerButtons[i].gameObject.SetActive(false);
+            }
+        }
+
+        serveButtonText.text = "Выберите ответ";
+    }
+
+    void OnAnswerSelected(int index)
+    {
+        bool isCorrect = index == activeCustomerObject.correctAnswerIndex;
+
+        for (int i = 0; i < answerButtons.Length; i++)
+        {
+            if (answerButtons[i] == null) continue;
+
+            Image img = answerButtons[i].GetComponent<Image>();
+            if (img == null) continue;
+
+            if (i == index)
+                img.color = isCorrect ? correctColor : wrongColor;
+            else
+                img.color = defaultAnswerColor;
+        }
+
+        string[] pool = isCorrect
+            ? activeCustomerObject.satisfiedDialogues
+            : activeCustomerObject.disappointedDialogues;
+
+        if (pool != null && pool.Length > 0 && dialogueText != null)
+        {
+            dialogueText.text = pool[Random.Range(0, pool.Length)];
+        }
+
+        state = DialogueState.Reacting;
+        serveButtonText.text = "Следующий гость";
+    }
+
+    void ResetAnswerButtons()
+    {
+        if (answerButtons == null) return;
+
+        foreach (Button b in answerButtons)
+        {
+            if (b == null) continue;
+
+            b.onClick.RemoveAllListeners();
+
+            Image img = b.GetComponent<Image>();
+            if (img != null)
+                img.color = defaultAnswerColor;
+        }
+    }
+
+    void HideUnusedAnswerButtons()
+    {
+        if (answerButtons == null) return;
+
+        for (int i = 0; i < answerButtons.Length; i++)
+        {
+            if (answerButtons[i] != null)
+                answerButtons[i].gameObject.SetActive(false);
         }
     }
 
     void FinishServing()
     {
         customersServed++;
-        waitingForNextCustomer = false;
 
         if (customersServed < maxCustomersPerDay)
+        {
             SpawnNewCustomer();
+        }
         else
+        {
             EndDay();
+        }
     }
 
     void EndDay()
     {
         dayFinished = true;
         goToGardenButton.interactable = true;
-        UpdateButtonText();
+        serveButtonText.text = "Следующий день";
+        state = DialogueState.Reacting;
     }
 
     void StartNextDay()
@@ -108,16 +230,8 @@ public class CustomerManager : MonoBehaviour
         customersServed = 0;
         dayFinished = false;
         goToGardenButton.interactable = false;
-        UpdateButtonText();
+        ShuffleCustomerPool();
         SpawnNewCustomer();
-    }
-
-    void UpdateButtonText()
-    {
-        if (dayFinished)
-            serveButtonText.text = "Следующий день";
-        else
-            serveButtonText.text = "Обслужить";
     }
 
     void ShuffleCustomerPool()
@@ -125,7 +239,7 @@ public class CustomerManager : MonoBehaviour
         for (int i = customerPool.Count - 1; i > 0; i--)
         {
             int j = Random.Range(0, i + 1);
-            var temp = customerPool[i];
+            CustomerObject temp = customerPool[i];
             customerPool[i] = customerPool[j];
             customerPool[j] = temp;
         }

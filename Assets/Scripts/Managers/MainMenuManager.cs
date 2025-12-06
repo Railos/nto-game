@@ -8,6 +8,11 @@ public class MainMenuManager : MonoBehaviour
         SceneManager.LoadScene("Outdoors");
     }
 
+    public void OpenSettings()
+    {
+        SceneManager.LoadScene("Settings");
+    }
+
     public void ExitGame()
     {
         Application.Quit();

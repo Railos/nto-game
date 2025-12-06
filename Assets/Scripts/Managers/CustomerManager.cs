@@ -5,32 +5,33 @@ using System.Collections.Generic;
 
 public class CustomerManager : MonoBehaviour
 {
-    public GameObject customerPrefab;
-    public Transform spawnPoint;
-    public Transform servicePoint;
-    public List<CustomerObject> customerPool = new List<CustomerObject>();
+    [Header("UI")]
+    public Image portraitImage;
+    public TextMeshProUGUI dialogueText;
     public Button serveButton;
     public Button goToGardenButton;
     public TextMeshProUGUI serveButtonText;
 
-    private GameObject activeCustomer;
+    [Header("Data")]
+    public List<CustomerObject> customerPool = new List<CustomerObject>();
+
     private CustomerObject activeCustomerObject;
     private int customersServed = 0;
     private int maxCustomersPerDay = 5;
     private bool dayFinished = false;
-    private TextMeshProUGUI text;
+    private bool waitingForNextCustomer = false;
 
     void Start()
     {
+        ShuffleCustomerPool();
+        goToGardenButton.interactable = false;
         UpdateButtonText();
         SpawnNewCustomer();
     }
 
-    public void SpawnNewCustomer()
+    void SpawnNewCustomer()
     {
-        if (activeCustomer != null) return;
         if (dayFinished) return;
-
         if (customersServed >= maxCustomersPerDay)
         {
             EndDay();
@@ -38,69 +39,95 @@ public class CustomerManager : MonoBehaviour
         }
 
         activeCustomerObject = customerPool[customersServed];
-        activeCustomer = Instantiate(customerPrefab, spawnPoint.position, Quaternion.identity);
-        activeCustomer.transform.position = servicePoint.position;
 
-        text = activeCustomer.GetComponentInChildren<TextMeshProUGUI>();
-        text.text = activeCustomerObject.entryDialogues[Random.Range(0, activeCustomerObject.entryDialogues.Length)];
+        if (portraitImage != null)
+        {
+            if (activeCustomerObject.portrait != null)
+                portraitImage.sprite = activeCustomerObject.portrait;
+
+            portraitImage.rectTransform.anchoredPosition =
+                activeCustomerObject.spawnPosition;
+        }
+
+        if (dialogueText != null && activeCustomerObject.entryDialogues.Length > 0)
+        {
+            dialogueText.text = activeCustomerObject
+                .entryDialogues[Random.Range(0, activeCustomerObject.entryDialogues.Length)];
+        }
+
+        waitingForNextCustomer = false;
     }
 
     public void ServeCustomer()
     {
         if (dayFinished)
         {
-            for (int i = customerPool.Count - 1; i > 0; i--) {
-                int j = Random.Range(0, i + 1);
-                var temp = customerPool[i];
-                customerPool[i] = customerPool[j];
-                customerPool[j] = temp;
-            }
+            ShuffleCustomerPool();
             StartNextDay();
             return;
         }
 
-        if (activeCustomer == null) return;
+        if (activeCustomerObject == null) return;
 
-        text.text = activeCustomerObject.satisfiedDialogues[Random.Range(0, activeCustomerObject.satisfiedDialogues.Length)];
+        if (!waitingForNextCustomer)
+        {
+            if (dialogueText != null && activeCustomerObject.satisfiedDialogues.Length > 0)
+            {
+                dialogueText.text = activeCustomerObject
+                    .satisfiedDialogues[Random.Range(0, activeCustomerObject.satisfiedDialogues.Length)];
+            }
 
-        Invoke(nameof(FinishServing), 2f);
+            waitingForNextCustomer = true;
+        }
+        else
+        {
+            FinishServing();
+        }
     }
 
-    private void FinishServing()
+    void FinishServing()
     {
-        Destroy(activeCustomer);
-        activeCustomer = null;
-
         customersServed++;
+        waitingForNextCustomer = false;
 
         if (customersServed < maxCustomersPerDay)
-            Invoke("SpawnNewCustomer", 0.5f);
+            SpawnNewCustomer();
         else
             EndDay();
     }
 
-    private void EndDay()
+    void EndDay()
     {
         dayFinished = true;
         goToGardenButton.interactable = true;
         UpdateButtonText();
     }
 
-    private void StartNextDay()
+    void StartNextDay()
     {
         customersServed = 0;
         dayFinished = false;
         goToGardenButton.interactable = false;
         UpdateButtonText();
-
         SpawnNewCustomer();
     }
 
-    private void UpdateButtonText()
+    void UpdateButtonText()
     {
         if (dayFinished)
             serveButtonText.text = "Следующий день";
         else
             serveButtonText.text = "Обслужить";
+    }
+
+    void ShuffleCustomerPool()
+    {
+        for (int i = customerPool.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            var temp = customerPool[i];
+            customerPool[i] = customerPool[j];
+            customerPool[j] = temp;
+        }
     }
 }

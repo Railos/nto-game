@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2d3ab5067a57284ca141bb958cd7f6c, type: 3}
+  m_Name: wolf
+  m_EditorClassIdentifier: 
+  name: "\u0412\u043E\u043B\u043A"
+  portrait: {fileID: 21300000, guid: aa7361b6631af9245a5fb1b6411d02c6, type: 3}
+  entryDialogues:
+  - "\u041F\u0420\u0418\u0412\u0415\u0422 \u0427\u0423\u0412\u0410\u041A \u041C\u0415\u041D\u042F
+    \u0417\u041E\u0412\u0423\u0422 \u0411\u0410\u0420\u0410\u041D"
+  - "\u041F\u0420\u0418\u0412\u0415\u0422 \u0414\u0420\u0423\u0413 \u0421\u0414\u0415\u041B\u0410\u0419
+    \u041C\u041D\u0415 \u0427\u0410\u0419"
+  - "\u0427\u0410\u0419 \u041C\u041D\u0415 \u0414\u0410\u0419 \u0416\u0418\u0412\u041E"
+  satisfiedDialogues:
+  - "\u0412\u0410\u0423 \u0414\u0420\u0423\u0413 \u0421\u041F\u0410\u0421\u0418\u0411\u041E"
+  - "\u041E\u0422\u041B\u0418\u0427\u041D\u042B\u0419 \u0427\u0410\u0419 "
+  - "\u0412\u041A\u0423\u0421\u041D\u042B\u0419 \u0427\u0410\u0419"
+  - "\u0410\u0420\u041E\u041C\u0410\u0422\u041D\u042B\u0419 \u0427\u0410\u0419"
+  disappointedDialogues: []

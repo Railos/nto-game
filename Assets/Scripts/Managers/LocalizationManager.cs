@@ -36,6 +36,7 @@ public class LocalizationManager : MonoBehaviour
 
     public void LoadLanguage(Language lang)
     {
+        CurrentLanguage = lang;
         string fileName = lang == Language.English ? "en" : "ru";
         TextAsset jsonFile = Resources.Load<TextAsset>("Localization/" + fileName);
 
@@ -62,8 +63,6 @@ public class LocalizationManager : MonoBehaviour
 
             localizedText[key] = value;
         }
-
-        Debug.Log("Loaded " + localizedText.Count + " entries from " + fileName);
     }
 
 

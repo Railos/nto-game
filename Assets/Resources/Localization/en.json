@@ -1,0 +1,12 @@
+{
+  "mainmenu_title": "Tea Keepers",
+  "mainmenu_start": "Start Game",
+  "mainmenu_settings": "Options",
+  "mainmenu_quit": "Quit Game",
+  "mainmenu_back": "Back",
+  "mainmenu_accept": "Accept",
+  "mainmenu_volume": "Volume",
+  "mainmenu_resolution": "Resolution",
+  "mainmenu_language": "Language",
+  "mainmenu_fullscreen": "Fullscreen"
+}

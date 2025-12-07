@@ -81,6 +81,7 @@ public class MainMenuManager : MonoBehaviour
                 LocalizationManager.Language.Russian;
 
         LocalizationManager.Instance.LoadLanguage(lang);
+        EventManager.OnLanguageChanged.Invoke(this);
 
         if (save)
             SaveSettingsAfterApply();

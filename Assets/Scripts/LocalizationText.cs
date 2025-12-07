@@ -11,15 +11,16 @@ public class LocalizationText : MonoBehaviour
     private void Awake()
     {
         tmp = GetComponent<TextMeshProUGUI>();
-        UpdateText();
+        UpdateText(this);
+        EventManager.OnLanguageChanged += UpdateText;
     }
 
     private void OnEnable()
     {
-        UpdateText();
+        UpdateText(this);
     }
 
-    public void UpdateText()
+    public void UpdateText(Component component)
     {
         if (LocalizationManager.Instance != null)
         {

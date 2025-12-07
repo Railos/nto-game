@@ -1,6 +1,12 @@
 {
-  "hello": "Привет!",
-  "bye": "Пока!",
+  "mainmenu_title": "Чайные хроники",
   "mainmenu_start": "Начать игру",
-  "mainmenu_options": "Настройки"
+  "mainmenu_settings": "Настройки",
+  "mainmenu_quit": "Выйти из игры",
+  "mainmenu_back": "Назад",
+  "mainmenu_accept": "Принять",
+  "mainmenu_volume": "Громкось",
+  "mainmenu_resolution": "Разрешение",
+  "mainmenu_language": "Язык игры",
+  "mainmenu_fullscreen": "Полный экран"
 }

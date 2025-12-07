@@ -1,10 +1,11 @@
 fileFormatVersion: 2
-guid: aa7361b6631af9245a5fb1b6411d02c6
+guid: a7ef1b167d9431d498a83d3d80206a61
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7444046612802208997
-    second: wolf_0
+      213: 2394735536844867376
+    second: "\u043D\u0430\u0447\u0430\u043B\u043E \u0440\u043E\u0441\u0442\u0430
+      \u0447\u0435\u0440\u043D\u044B\u0439 \u0447\u0430\u0439_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -75,7 +76,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -96,30 +97,18 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WindowsStoreApps
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: wolf_0
+      name: "\u043D\u0430\u0447\u0430\u043B\u043E \u0440\u043E\u0441\u0442\u0430
+        \u0447\u0435\u0440\u043D\u044B\u0439 \u0447\u0430\u0439_0"
       rect:
         serializedVersion: 2
-        x: 59
-        y: 79
-        width: 532
-        height: 482
+        x: 39
+        y: 0
+        width: 82
+        height: 71
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +117,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5e4868f34f09e4760800000000000000
-      internalID: 7444046612802208997
+      spriteID: 03784ac684fcb3120800000000000000
+      internalID: 2394735536844867376
       vertices: []
       indices: 
       edges: []
@@ -148,7 +137,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      wolf_0: 7444046612802208997
+      "\u043D\u0430\u0447\u0430\u043B\u043E \u0440\u043E\u0441\u0442\u0430 \u0447\u0435\u0440\u043D\u044B\u0439 \u0447\u0430\u0439_0": 2394735536844867376
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

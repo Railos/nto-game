@@ -16,10 +16,11 @@ public class CustomerManager : MonoBehaviour
     public Image portraitImage;
     public TextMeshProUGUI dialogueText;
     public Button serveButton;
-    public Button goToGardenButton;
+    public GameObject goToGardenButton;
     public TextMeshProUGUI serveButtonText;
     public Button[] answerButtons;
     public TextMeshProUGUI[] answerTexts;
+    public TextMeshProUGUI moneyText;
 
     [Header("Answer Colors")]
     public Color correctColor = Color.green;
@@ -34,16 +35,66 @@ public class CustomerManager : MonoBehaviour
     private int maxCustomersPerDay = 5;
     private bool dayFinished = false;
     private DialogueState state = DialogueState.WaitingOrder;
+    
+    public Cup cup;
+    public List<RecipeSO> recipes;
+
+    public void CheckCup()
+    {
+        foreach (var recipe in recipes)
+        {
+            if (IsMatchingRecipe(recipe))
+            {
+                Debug.Log("Успех! Подходит рецепт: " + recipe.recipeName);
+                cup.Clear();
+                ShowQuestionWithAnswers();
+                return;
+            }
+        }
+
+        Debug.Log("Неверный рецепт! Клиент недоволен.");
+        cup.Clear();
+        WrongCup();
+    }
+
+    private bool IsMatchingRecipe(RecipeSO recipe)
+    {
+        // Сравниваем количество
+        if (cup.ingredients.Count != recipe.requiredIngredients.Count)
+        {
+            Debug.Log("Количество ингредиентов не совпадает.");
+            return false;
+        }
+
+        // Проверяем, что каждый нужный ингредиент есть в стакане
+            foreach (var ing in recipe.requiredIngredients)
+            {
+                if (!cup.ingredients.Contains(ing))
+                {
+                    Debug.Log("Отсутствует ингредиент: " + ing.displayName);
+                    return false;
+                } 
+            }
+
+        return true;
+    }
 
     void Start()
     {
         ShuffleCustomerPool();
-        goToGardenButton.interactable = false;
-
-        if (serveButton != null)
-            serveButton.onClick.AddListener(OnServeButtonClick);
+        goToGardenButton.SetActive(false);
 
         SpawnNewCustomer();
+    }
+
+    public void cupReadyToServe()
+    {
+        serveButtonText.text = "Обслужить";
+    }
+
+    public void cupUnreadyToServe()
+    {
+        serveButtonText.text = "Чай не готов";
     }
 
     void SpawnNewCustomer()
@@ -78,13 +129,16 @@ public class CustomerManager : MonoBehaviour
             dialogueText.text = activeCustomerObject.orderText;
 
         state = DialogueState.WaitingOrder;
-        serveButtonText.text = "Приготовить";
+        if (!cup.readyToServe)
+            serveButtonText.text = "Чай не готов";
+        else
+            serveButtonText.text = "Обслужить";
 
         ResetAnswerButtons();
         HideUnusedAnswerButtons();
     }
 
-    void OnServeButtonClick()
+    public void OnServeButtonClick()
     {
         if (dayFinished)
         {
@@ -97,7 +151,8 @@ public class CustomerManager : MonoBehaviour
         switch (state)
         {
             case DialogueState.WaitingOrder:
-                ShowQuestionWithAnswers();
+                if (cup.readyToServe)
+                    CheckCup();
                 break;
 
             case DialogueState.ChoosingAnswer:
@@ -112,6 +167,10 @@ public class CustomerManager : MonoBehaviour
 
     void ShowQuestionWithAnswers()
     {
+        int newMoney = GameManager.Instance.money + activeCustomerObject.wantedRecipe.moneyGain;
+        moneyText.text = newMoney.ToString();
+        EventManager.OnMoneyChanged.Invoke(this, newMoney);
+
         state = DialogueState.ChoosingAnswer;
 
         if (dialogueText != null)
@@ -163,15 +222,6 @@ public class CustomerManager : MonoBehaviour
                 img.color = defaultAnswerColor;
         }
 
-        string[] pool = isCorrect
-            ? activeCustomerObject.satisfiedDialogues
-            : activeCustomerObject.disappointedDialogues;
-
-        if (pool != null && pool.Length > 0 && dialogueText != null)
-        {
-            dialogueText.text = pool[Random.Range(0, pool.Length)];
-        }
-
         state = DialogueState.Reacting;
         serveButtonText.text = "Следующий гость";
     }
@@ -203,6 +253,17 @@ public class CustomerManager : MonoBehaviour
         }
     }
 
+    void WrongCup()
+    {
+        state = DialogueState.Reacting;
+
+        string[] pool = activeCustomerObject.disappointedDialogues;
+
+        dialogueText.text = pool[Random.Range(0, pool.Length)];
+
+        serveButtonText.text = "Следующий гость";
+    }
+
     void FinishServing()
     {
         customersServed++;
@@ -220,7 +281,7 @@ public class CustomerManager : MonoBehaviour
     void EndDay()
     {
         dayFinished = true;
-        goToGardenButton.interactable = true;
+        goToGardenButton.SetActive(true);
         serveButtonText.text = "Следующий день";
         state = DialogueState.Reacting;
     }
@@ -229,7 +290,7 @@ public class CustomerManager : MonoBehaviour
     {
         customersServed = 0;
         dayFinished = false;
-        goToGardenButton.interactable = false;
+        goToGardenButton.SetActive(false);
         ShuffleCustomerPool();
         SpawnNewCustomer();
     }

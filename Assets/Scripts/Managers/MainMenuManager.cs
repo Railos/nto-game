@@ -61,20 +61,16 @@ public class MainMenuManager : MonoBehaviour
 
     public void ApplyChanges(bool save)
     {
-        // Применяем громкость
         AudioListener.volume = newVolume / 100f;
 
-        // Применяем полноэкранность
         Screen.fullScreen = newFullscreen;
 
-        // Применяем разрешение
         Screen.SetResolution(
             widths[newResolutionIndex],
             heights[newResolutionIndex],
             newFullscreen
         );
 
-        // Применяем язык
         LocalizationManager.Language lang =
             newLanguageIndex == 1 ?
                 LocalizationManager.Language.English :

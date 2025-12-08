@@ -3,22 +3,23 @@ using UnityEngine;
 [CreateAssetMenu]
 public class CustomerObject : ScriptableObject
 {
-    [Header("Общее")]
+    [Header("пїЅпїЅпїЅпїЅпїЅ")]
     public string name;
     public Sprite portrait;
     public Vector2 spawnPosition;
     public Vector2 scale = Vector2.one;
+    public RecipeSO wantedRecipe;
 
-    [Header("Диалоги входа / заказа")]
+    [Header("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ / пїЅпїЅпїЅпїЅпїЅпїЅ")]
     public string[] entryDialogues;       
     public string orderText;              
 
-    [Header("Вопрос после заказа")]
+    [Header("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ")]
     public string questionText;          
     public string[] answerOptions;           
     public int correctAnswerIndex;       
 
-    [Header("Реакции")]
+    [Header("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ")]
     public string[] satisfiedDialogues;   
     public string[] disappointedDialogues;  
 }

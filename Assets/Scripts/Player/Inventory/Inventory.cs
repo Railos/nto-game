@@ -24,6 +24,7 @@ public class Inventory
                 {
                     inventoryItem.amount += item.amount;
                     itemAlreadyInInventory = true;
+                    OnItemListChanged?.Invoke(this, EventArgs.Empty);
                     return;
                 }
             }
